@@ -184,6 +184,7 @@ class MimeDetect {
     "ogg" => "audio/ogg",
     "flac" => "audio/x-flac",
     "wav" => "audio/vnd.wave",
+    "rf64" => "audio/x-wave",
     // Chemical:
     // MDL Molfile.
     "mol" => "chemical/x-mdl-molfile",
