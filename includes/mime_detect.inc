@@ -244,7 +244,8 @@ class MimeDetect {
    * Construtor.
    */
   public function __construct() {
-
+    module_load_include('inc', 'islandora', 'includes/mimetype.utils');
+    $this->protectedMimeTypes = islandora_mime_mapping();
     // Populate the reverse shortlist:
     $this->protectedFileExtensions = array_flip($this->protectedMimeTypes);
     $this->protectedFileExtensions += $this->extensionExceptions;
