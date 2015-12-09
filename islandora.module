@@ -52,6 +52,7 @@ define('ISLANDORA_UPDATE_RELATED_OBJECTS_PROPERTIES_HOOK', 'islandora_update_rel
 define('ISLANDORA_METADATA_OBJECT_ALTER', 'islandora_metadata_object');
 define('ISLANDORA_METADATA_OBJECT_DESCRIPTION_ALTER', 'islandora_metadata_object_description');
 define('ISLANDORA_BREADCRUMB_FILTER_PREDICATE_HOOK', 'islandora_get_breadcrumb_query_predicates');
+define('ISLANDORA_EDIT_DATASTREAM_REGISTRY_HOOK', 'islandora_edit_datastream_registry');
 
 // @todo Add Documentation.
 define('ISLANDORA_OBJECT_INGESTED_HOOK', 'islandora_object_ingested');
@@ -61,9 +62,6 @@ define('ISLANDORA_DATASTREAM_INGESTED_HOOK', 'islandora_datastream_ingested');
 define('ISLANDORA_DATASTREAM_MODIFIED_HOOK', 'islandora_datastream_modified');
 define('ISLANDORA_DATASTREAM_PURGED_HOOK', 'islandora_datastream_purged');
 define('ISLANDORA_INGEST_STEP_HOOK', 'islandora_ingest_steps');
-// The "ISLANDORA_DERVIATIVE_CREATION_HOOK" constant has deprecated as of
-// 7.x-1.5, and should be removed after the next release.
-define('ISLANDORA_DERVIATIVE_CREATION_HOOK', 'islandora_derivative');
 define('ISLANDORA_DERIVATIVE_CREATION_HOOK', 'islandora_derivative');
 
 // Autocomplete paths.
@@ -1385,9 +1383,9 @@ function islandora_islandora_required_objects(IslandoraTuque $connection) {
   $root_collection->label = 'Top-level Collection';
   $root_collection->models = 'islandora:collectionCModel';
   // Collection Policy Datastream.
-  $datastream = $root_collection->constructDatastream('COLLECTION_POLICY', 'X');
+  $datastream = $root_collection->constructDatastream('COLLECTION_POLICY', 'M');
   $datastream->label = 'Collection policy';
-  $datastream->mimetype = 'text/xml';
+  $datastream->mimetype = 'application/xml';
   $datastream->setContentFromFile("$module_path/xml/islandora_collection_policy.xml", FALSE);
   $root_collection->ingestDatastream($datastream);
   // TN Datastream.
