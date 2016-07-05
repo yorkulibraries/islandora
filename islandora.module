@@ -1628,11 +1628,17 @@ function islandora_entity_property_info() {
 function islandora_download_clip(AbstractObject $object) {
   if (isset($_GET['clip'])) {
     $url = $_GET['clip'];
-    if (!preg_match('/^https?:\/\//', $url)) {
-      $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
-      $http_protocol = $is_https ? 'https' : 'http';
-      $url = $http_protocol . '://' . $_SERVER['HTTP_HOST'] . $url;
+
+    $seadragon_settings = variable_get('islandora_openseadragon_settings', array());
+    if (!isset($seadragon_settings['djatokaServerBaseURL'])) {
+      drupal_access_denied();
+      drupal_exit();
     }
+    if (!preg_match('/^https?:\/\//', $url) || drupal_substr($url, 0, drupal_strlen($seadragon_settings['djatokaServerBaseURL'])) !== $seadragon_settings['djatokaServerBaseURL']) {
+      drupal_access_denied();
+      drupal_exit();
+    }
+
     $filename = $object->label;
     header("Content-Disposition: attachment; filename=\"{$filename}.jpg\"");
     header("Content-type: image/jpeg");
@@ -1644,7 +1650,7 @@ function islandora_download_clip(AbstractObject $object) {
     $response = curl_exec($ch);
     curl_close($ch);
   }
-  exit();
+  drupal_exit();
 }
 
 /**
