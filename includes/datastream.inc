@@ -59,7 +59,9 @@ function islandora_view_datastream(AbstractDatastream $datastream, $download = F
     $duplicate_extension_position = strlen($label) > $extension_length ?
       strripos($label, $extension, -$extension_length) :
       FALSE;
-    $filename = $label;
+    $filename = $datastream->parent;
+    $no_space_label = str_replace(' ', '_', $label);
+    $filename .= '_'.$no_space_label;
     if ($duplicate_extension_position === FALSE) {
       $filename .= $extension;
     }
