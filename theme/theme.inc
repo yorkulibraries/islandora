@@ -291,6 +291,7 @@ function islandora_objects_object_mapper($object_id) {
       'thumb' => l($img, $url, $link_options),
       'description' => $description,
       'pid' => $o->id,
+      'models' => $o->models,
     );
   }
   else {
@@ -302,6 +303,7 @@ function islandora_objects_object_mapper($object_id) {
       'thumb' => '',
       'description' => '',
       'pid' => $object_id,
+      'models' => $o->models,
     );
   }
 }
