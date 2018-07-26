@@ -353,7 +353,7 @@ function hook_islandora_datastream_modified(AbstractObject $object, AbstractData
  *
  * @see hook_islandora_datastream_modified()
  */
-function hook_cmodel_pid_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream, array $params) {
+function hook_cmodel_pid_dsid_islandora_datastream_modified(AbstractObject $object, AbstractDatastream $datastream, array $params) {
 
 }
 
@@ -377,7 +377,7 @@ function hook_islandora_datastream_purged(AbstractObject $object, $dsid) {
  *
  * @see hook_islandora_datastream_purged()
  */
-function hook_cmodel_pid_islandora_datastream_purged(AbstractObject $object, $dsid) {
+function hook_cmodel_pid_dsid_islandora_datastream_purged(AbstractObject $object, $dsid) {
 
 }
 
@@ -746,7 +746,7 @@ function hook_cmodel_pid_islandora_derivative() {
 /**
  * Allows for the altering of defined derivative functions.
  */
-function hook_islandora_derivative_alter(&$derivatives, AbstractObject $object, $ds_modified_params = array()) {
+function hook_islandora_derivative_alter(&$derivatives, AbstractObject $object = NULL, $ds_modified_params = array()) {
   foreach ($derivatives as $key => $derivative) {
     if ($derivative['destination_dsid'] == 'TN') {
       unset($derivatives[$key]);
@@ -944,4 +944,25 @@ function hook_islandora_breadcrumbs_backends() {
 function callback_islandora_breadcrumbs_backends(AbstractObject $object) {
   // Do something to get an array of breadcrumb links for $object, root first.
   return array($root_link, $collection_link, $object_link);
+}
+
+/**
+ * Permit modules to alter the filename of a downloaded datastream.
+ *
+ * @param string $filename
+ *   The filename being created.
+ *
+ * @param AbstractDatastream $datastream
+ *   The datastream object being downloaded.
+ */
+function hook_islandora_datastream_filename_alter(&$filename, AbstractDatastream $datastream) {
+
+  // Example taken from islandora_datastream_filenamer.
+  $pattern = variable_get('islandora_ds_download_filename_pattern', FALSE);
+  if ($pattern) {
+    $filename = token_replace($pattern,
+      array('datastream' => $datastream),
+      array('clear' => TRUE)
+    );
+  }
 }
