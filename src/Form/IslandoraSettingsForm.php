@@ -87,6 +87,7 @@ class IslandoraSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('JWT Expiry'),
       '#default_value' => $config->get(self::JWT_EXPIRY),
+      '#description' => 'Eg: 60, "2 days", "10h", "7d". A numeric value is interpreted as a seconds count. If you use a string be sure you provide the time units (days, hours, etc), otherwise milliseconds unit is used by default ("120" is equal to "120ms").',
     ];
 
     $form[self::GEMINI_URL] = [
@@ -111,8 +112,8 @@ class IslandoraSettingsForm extends ConfigFormBase {
 
     $form['bundle_container'] = [
       '#type' => 'details',
-      '#title' => $this->t('Bundles with Gemini URI Pseudo field'),
-      '#description' => $this->t('The selected bundles can display the pseudo-field showing the Gemini linked URI. Configured in the field display.'),
+      '#title' => $this->t('Fedora URL Display'),
+      '#description' => $this->t('Selected bundles can display the Fedora URL of repository content.'),
       '#open' => TRUE,
       self::GEMINI_PSEUDO => [
         '#type' => 'checkboxes',
