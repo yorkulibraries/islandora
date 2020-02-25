@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\StreamWrapper;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use \DateTime;
 
 /**
  * Fedora adapter for Flysystem.
@@ -249,6 +250,39 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function write($path, $contents, Config $config) {
+    \Drupal::logger('flysystem adapter')->info('in write for flysystem');
+    if ($this->has($path)){
+      \Drupal::logger('flysystem adapter')->info('in write for flysystem and already exists in fedora');
+      $fedora_url = $path;
+      $headers = [];
+      $date = new DateTime();
+      $timestamp = $date->format("D, d M Y H:i:s O");
+      // create version in Fedora.
+      try {
+        \Drupal::logger('flysystem')->info('right before make version ' . $status);
+        $response = $this->fedora->createVersion(
+          $fedora_url,
+          $timestamp,
+          null,
+          $headers
+        );
+        $status = $response->getStatusCode();
+        if (!in_array($status, [201])) {
+          $reason = $response->getReasonPhrase();
+          throw new \RuntimeException(
+            "Client error: `POST $fedora_url` resulted in `$status $reason` response: " .
+            $response->getBody(),
+            $status
+          );
+        }
+        // Return the response from Fedora.
+        \Drupal::logger('flysystem')->info('past making a version with status ' . $status);
+        // return $response;
+      } catch (Exception $e) {
+        \Drupal::logger('flysystem')->error('Caught exception when creating version: ', $e->getMessage(), "\n");
+      }
+    }
+
     $headers = [
       'Content-Type' => $this->mimeTypeGuesser->guess($path),
     ];
