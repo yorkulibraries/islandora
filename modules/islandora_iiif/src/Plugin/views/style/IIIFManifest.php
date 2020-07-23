@@ -184,7 +184,6 @@ class IIIFManifest extends StylePluginBase {
           $canvas_id = $iiif_base_id . '/canvas/' . $entity->id();
           $annotation_id = $iiif_base_id . '/annotation/' . $entity->id();
 
-	  dsm("BEFORE REQUEST");
           // Try to fetch the IIIF metadata for the image.
           try {
             $info_json = $this->httpClient->get($iiif_url)->getBody();
