@@ -40,7 +40,7 @@ class DeleteMediaTest extends IslandoraFunctionalTestBase {
   /**
    * User account.
    *
-   * @var \Drupal\Core\Session\AccountInterface;
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
 
