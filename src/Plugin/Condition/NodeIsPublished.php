@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Condition(
  *   id = "node_is_published",
  *   label = @Translation("Node is published"),
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", required = TRUE , label = @Translation("node"))
  *   }
  * )
@@ -72,11 +72,12 @@ class NodeIsPublished extends ConditionPluginBase implements ContainerFactoryPlu
     if (!$node  && !$this->isNegated()) {
       return FALSE;
     }
-    if ($node->isPublished() && !$this->isNegated()) {
-      return TRUE;
+    elseif (!$node) {
+      return FALSE;
     }
-
-    return FALSE;
+    else {
+      return $node->isPublished();
+    }
   }
 
   /**

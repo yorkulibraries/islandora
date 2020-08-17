@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Condition(
  *   id = "node_has_parent",
  *   label = @Translation("Node has parent"),
- *   context = {
+ *   context_definitions = {
  *     "node" = @ContextDefinition("entity:node", required = TRUE , label = @Translation("node"))
  *   }
  * )
@@ -145,12 +145,13 @@ class NodeHasParent extends ConditionPluginBase implements ContainerFactoryPlugi
           $nids = $field->getValue();
           foreach ($nids as $nid) {
             if ($nid['target_id'] == $this->configuration['parent_nid']) {
-              return $this->isNegated() ? FALSE : TRUE;
+              return TRUE;
             }
           }
         }
       }
     }
+    return FALSE;
   }
 
   /**
