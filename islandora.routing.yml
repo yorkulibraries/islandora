@@ -57,3 +57,11 @@ islandora.media_source_put_to_node:
     _custom_access: '\Drupal\islandora\Controller\MediaSourceController::putToNodeAccess'
   options:
     _auth: ['basic_auth', 'cookie', 'jwt_auth']
+
+islandora.confirm_delete_media_and_file:
+  path: '/media/delete_with_files'
+  defaults:
+    _form: 'Drupal\islandora\Form\ConfirmDeleteMediaAndFile'
+  requirements:
+    _permission: 'administer media+delete any media'
+
