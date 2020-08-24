@@ -250,38 +250,35 @@ class FedoraAdapter implements AdapterInterface {
    * {@inheritdoc}
    */
   public function write($path, $contents, Config $config) {
+    $headers = [
+      'Content-Type' => $this->mimeTypeGuesser->guess($path),
+    ];
     if ($this->has($path)) {
       $fedora_url = $path;
-      $headers = [];
       $date = new DateTime();
       $timestamp = $date->format("D, d M Y H:i:s O");
       // Create version in Fedora.
       try {
-        \Drupal::logger('flysystem')->info('Request being sent to Fedora to make a version for ' . $fedora_url);
         $response = $this->fedora->createVersion(
           $fedora_url,
           $timestamp,
           NULL,
           $headers
         );
-        $status = $response->getStatusCode();
-        if (!in_array($status, [201])) {
-          $reason = $response->getReasonPhrase();
-          throw new \RuntimeException(
-            "Client error: `POST $fedora_url` resulted in `$status $reason` response: " .
-            $response->getBody(),
-            $status
+        if (isset($response) && $response->getStatusCode() == 201) {
+          \Drupal::logger('fedora_flysystem')->info('Created a version in Fedora for ' . $fedora_url);
+        }
+        else {
+          \Drupal::logger('fedora_flysystem')->error(
+            "Client error: `Failed to create a Fedora version of $fedora_url`. Response is " . print_r($response, TRUE)
           );
+
         }
       }
       catch (\Exception $e) {
-        \Drupal::logger('flysystem')->error('Caught exception when creating version: ' . $e->getMessage() . "\n");
+        \Drupal::logger('fedora_flysystem')->error('Caught exception when creating version: ' . $e->getMessage() . "\n");
       }
     }
-
-    $headers = [
-      'Content-Type' => $this->mimeTypeGuesser->guess($path),
-    ];
 
     $response = $this->fedora->saveResource(
         $path,
