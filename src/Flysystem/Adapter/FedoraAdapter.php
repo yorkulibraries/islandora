@@ -253,7 +253,8 @@ class FedoraAdapter implements AdapterInterface {
     $headers = [
       'Content-Type' => $this->mimeTypeGuesser->guess($path),
     ];
-    if ($this->has($path)) {
+    $heads_response = $this->fedora->getResourceHeaders($path);
+    if (isset($heads_response) && $heads_response->getStatusCode() == 200) {
       $fedora_url = $path;
       $date = new DateTime();
       $timestamp = $date->format("D, d M Y H:i:s O");
