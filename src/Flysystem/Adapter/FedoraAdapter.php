@@ -398,4 +398,3 @@ class FedoraAdapter implements AdapterInterface {
   }
 
 }
-
