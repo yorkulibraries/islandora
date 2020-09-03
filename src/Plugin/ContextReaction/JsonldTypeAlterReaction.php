@@ -91,11 +91,11 @@ class JsonldTypeAlterReaction extends NormalizerAlterReaction {
       '#type' => 'select',
       '#title' => $this->t('Field containing RDF type information'),
       '#options' => $options,
-      '#description' => $this->t("In JSON-LD representations, allow the rdf:type to vary 
-      based on the value of a field. <br /><strong>Note:</strong> The field selected 
-      here must be an Entity reference field and its allowable targets must have 
-      field_external_uri. The value of the URL component of field_external_uri in the 
-      referenced entity will be used as rdf:type for entities selected by this context."),
+      '#description' => $this->t("Use a field to determine the rdf:type. <br/><br/>
+      In JSON-LD representations, the @type attribute (shorthand for rdf:type) will
+      be populated from the value of this field, rather than the default for the bundle
+      as configured in the bundle's RDF mapping. If this field is an entity reference
+      field, the value of the referenced entity's `field_external_uri` will be used."),
       '#default_value' => isset($config['source_field']) ? $config['source_field'] : '',
     ];
     return $form;
