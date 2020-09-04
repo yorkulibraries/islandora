@@ -43,8 +43,12 @@ script:
   - $SCRIPT_DIR/run-tests.sh "islandora_video"
   - $SCRIPT_DIR/run-tests.sh "islandora_text_extraction"
 
+after_script:
+  - ps -ef
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - ps -ef
 
 notifications:
   slack:
