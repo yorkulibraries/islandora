@@ -3,7 +3,7 @@
 namespace Drupal\Tests\islandora\Functional;
 
 /**
- * Class IslandoraSettingsFormTest.
+ * Tests Islandora Settings Form.
  *
  * @package Drupal\Tests\islandora\Functional
  * @group islandora

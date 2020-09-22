@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class LinkHeaderSubscriber.
+ * Abstract class to subscribe to LinkHeader Event.
  *
  * @package Drupal\islandora\EventSubscriber
  */

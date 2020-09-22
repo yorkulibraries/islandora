@@ -4,8 +4,8 @@ namespace Drupal\islandora;
 
 use Drupal\context\ContextManager;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -15,9 +15,9 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\flysystem\FlysystemFactory;
-use Drupal\islandora\ContextProvider\NodeContextProvider;
-use Drupal\islandora\ContextProvider\MediaContextProvider;
 use Drupal\islandora\ContextProvider\FileContextProvider;
+use Drupal\islandora\ContextProvider\MediaContextProvider;
+use Drupal\islandora\ContextProvider\NodeContextProvider;
 use Drupal\islandora\ContextProvider\TermContextProvider;
 use Drupal\media\MediaInterface;
 use Drupal\node\NodeInterface;
@@ -29,7 +29,9 @@ use Drupal\taxonomy\TermInterface;
 class IslandoraUtils {
 
   const EXTERNAL_URI_FIELD = 'field_external_uri';
+
   const MEDIA_OF_FIELD = 'field_media_of';
+
   const MEDIA_USAGE_FIELD = 'field_media_use';
 
   /**
@@ -151,10 +153,13 @@ class IslandoraUtils {
    *   Calling getStorage() throws if the storage handler couldn't be loaded.
    */
   public function getMedia(NodeInterface $node) {
-    if (!$this->entityTypeManager->getStorage('field_storage_config')->load('media.' . self::MEDIA_OF_FIELD)) {
+    if (!$this->entityTypeManager->getStorage('field_storage_config')
+      ->load('media.' . self::MEDIA_OF_FIELD)) {
       return [];
     }
-    $mids = $this->entityQuery->get('media')->condition(self::MEDIA_OF_FIELD, $node->id())->execute();
+    $mids = $this->entityQuery->get('media')
+      ->condition(self::MEDIA_OF_FIELD, $node->id())
+      ->execute();
     if (empty($mids)) {
       return [];
     }
@@ -217,7 +222,8 @@ class IslandoraUtils {
       $query->condition($condition, $fid);
     }
 
-    return $this->entityTypeManager->getStorage('media')->loadMultiple($query->execute());
+    return $this->entityTypeManager->getStorage('media')
+      ->loadMultiple($query->execute());
   }
 
   /**
@@ -261,7 +267,8 @@ class IslandoraUtils {
       return NULL;
     }
 
-    return $this->entityTypeManager->getStorage('taxonomy_term')->load(reset($results));
+    return $this->entityTypeManager->getStorage('taxonomy_term')
+      ->load(reset($results));
   }
 
   /**
@@ -587,7 +594,10 @@ class IslandoraUtils {
    */
   public function getDownloadUrl(FileInterface $file) {
     $undefined = $this->languageManager->getLanguage('und');
-    return $file->url('canonical', ['absolute' => TRUE, 'language' => $undefined]);
+    return $file->url('canonical', [
+      'absolute' => TRUE,
+      'language' => $undefined,
+    ]);
   }
 
   /**

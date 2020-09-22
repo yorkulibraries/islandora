@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\File\FileSystem;
 
 /**
- * Class MediaSourceController.
+ * Controller for Media Source.
  */
 class MediaSourceController extends ControllerBase {
 

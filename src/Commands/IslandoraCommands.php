@@ -38,7 +38,7 @@ class IslandoraCommands extends DrushCommands {
    * @hook validate migrate:import
    */
   public function validateUserImport(CommandData $commandData) {
-    $this->validateUser($commandData);;
+    $this->validateUser($commandData);
   }
 
   /**

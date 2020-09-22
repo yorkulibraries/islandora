@@ -10,7 +10,7 @@ use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class GeminiClientFactoryTest.
+ * Tests GeminiClientFactory.
  *
  * @package Drupal\Tests\islandora\Kernel
  * @group islandora

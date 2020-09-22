@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Class MediaSourceController.
+ * Controller for MediaSource.
  *
  * @package Drupal\islandora\Controller
  */

@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\islandora\Kernel;
 
+use Drupal\islandora\Flysystem\Adapter\FedoraAdapter;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
-use Drupal\islandora\Flysystem\Adapter\FedoraAdapter;
 use Islandora\Chullo\IFedoraApi;
 use League\Flysystem\Config;
 use Prophecy\Argument;
@@ -31,7 +31,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getResource('')->willReturn($response);
     $api = $prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -42,8 +43,13 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   protected function createAdapterForFile() {
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')
+      ->willReturn([
+        '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+        '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"',
+      ]);
     $prophecy->getHeader('Content-Type')->willReturn(['text/plain']);
     $prophecy->getHeader('Content-Length')->willReturn([strlen("DERP")]);
     $prophecy->getBody()->willReturn(PSR7\stream_for("DERP"));
@@ -54,7 +60,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy->getResource('')->willReturn($response);
     $api = $prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -65,15 +72,21 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   protected function createAdapterForDirectory() {
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#RDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')
+      ->willReturn([
+        '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+        '<http://www.w3.org/ns/ldp#RDFSource>;rel="type"',
+      ]);
     $response = $prophecy->reveal();
 
     $prophecy = $this->prophesize(IFedoraApi::class);
     $prophecy->getResourceHeaders('')->willReturn($response);
     $api = $prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -87,16 +100,22 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(201);
     $fedora_prophecy->createVersion('', Argument::any(), NULL,
-    Argument::any())->willReturn($prophecy->reveal());
+      Argument::any())->willReturn($prophecy->reveal());
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(201);
 
-    $fedora_prophecy->saveResource('', '', Argument::any())->willReturn($prophecy->reveal());
+    $fedora_prophecy->saveResource('', '', Argument::any())
+      ->willReturn($prophecy->reveal());
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')
+      ->willReturn([
+        '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+        '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"',
+      ]);
     $prophecy->getHeader('Content-Type')->willReturn(['text/plain']);
     $prophecy->getHeader('Content-Length')->willReturn([strlen("DERP")]);
     $prophecy->getBody()->willReturn(PSR7\stream_for("DERP"));
@@ -105,7 +124,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -122,11 +142,13 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(500);
 
-    $fedora_prophecy->saveResource('', '', Argument::any())->willReturn($prophecy->reveal());
+    $fedora_prophecy->saveResource('', '', Argument::any())
+      ->willReturn($prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -144,14 +166,20 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#RDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')
+      ->willReturn([
+        '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+        '<http://www.w3.org/ns/ldp#RDFSource>;rel="type"',
+      ]);
 
     $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -169,7 +197,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $fedora_prophecy->getResourceHeaders('')->willReturn($prophecy->reveal());
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -187,7 +216,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -203,18 +233,22 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $head_prophecy = $this->prophesize(Response::class);
     $head_prophecy->getStatusCode()->willReturn(410);
-    $head_prophecy->getHeader('Link')->willReturn('<some-path-to-a-tombstone>; rel="hasTombstone"');
+    $head_prophecy->getHeader('Link')
+      ->willReturn('<some-path-to-a-tombstone>; rel="hasTombstone"');
 
     $tombstone_prophecy = $this->prophesize(Response::class);
     $tombstone_prophecy->getStatusCode()->willReturn(204);
 
     $fedora_prophecy->deleteResource('')->willReturn($prophecy->reveal());
-    $fedora_prophecy->getResourceHeaders('')->willReturn($head_prophecy->reveal());
-    $fedora_prophecy->deleteResource('some-path-to-a-tombstone')->willReturn($tombstone_prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('')
+      ->willReturn($head_prophecy->reveal());
+    $fedora_prophecy->deleteResource('some-path-to-a-tombstone')
+      ->willReturn($tombstone_prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -230,18 +264,22 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $head_prophecy = $this->prophesize(Response::class);
     $head_prophecy->getStatusCode()->willReturn(410);
-    $head_prophecy->getHeader('Link')->willReturn('<some-path-to-a-tombstone>; rel="hasTombstone"');
+    $head_prophecy->getHeader('Link')
+      ->willReturn('<some-path-to-a-tombstone>; rel="hasTombstone"');
 
     $tombstone_prophecy = $this->prophesize(Response::class);
     $tombstone_prophecy->getStatusCode()->willReturn(500);
 
     $fedora_prophecy->deleteResource('')->willReturn($prophecy->reveal());
-    $fedora_prophecy->getResourceHeaders('')->willReturn($head_prophecy->reveal());
-    $fedora_prophecy->deleteResource('some-path-to-a-tombstone')->willReturn($tombstone_prophecy->reveal());
+    $fedora_prophecy->getResourceHeaders('')
+      ->willReturn($head_prophecy->reveal());
+    $fedora_prophecy->deleteResource('some-path-to-a-tombstone')
+      ->willReturn($tombstone_prophecy->reveal());
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     return new FedoraAdapter($api, $mime_guesser);
   }
@@ -414,7 +452,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testWriteFail() {
     $adapter = $this->createAdapterForWriteFail();
 
-    $this->assertTrue($adapter->write('', '', $this->prophesize(Config::class)->reveal()) == FALSE, "write() must return FALSE on non-201 or non-204");
+    $this->assertTrue($adapter->write('', '', $this->prophesize(Config::class)
+      ->reveal()) == FALSE, "write() must return FALSE on non-201 or non-204");
   }
 
   /**
@@ -423,7 +462,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testWrite() {
     $adapter = $this->createAdapterForWrite();
 
-    $metadata = $adapter->write('', '', $this->prophesize(Config::class)->reveal());
+    $metadata = $adapter->write('', '', $this->prophesize(Config::class)
+      ->reveal());
     $this->assertFileMetadata($metadata);
   }
 
@@ -433,7 +473,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testWriteStreamFail() {
     $adapter = $this->createAdapterForWriteFail();
 
-    $this->assertTrue($adapter->writeStream('', '', $this->prophesize(Config::class)->reveal()) == FALSE, "writeStream() must return FALSE on non-201 or non-204");
+    $this->assertTrue($adapter->writeStream('', '', $this->prophesize(Config::class)
+      ->reveal()) == FALSE, "writeStream() must return FALSE on non-201 or non-204");
   }
 
   /**
@@ -442,7 +483,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testWriteStream() {
     $adapter = $this->createAdapterForWrite();
 
-    $metadata = $adapter->writeStream('', '', $this->prophesize(Config::class)->reveal());
+    $metadata = $adapter->writeStream('', '', $this->prophesize(Config::class)
+      ->reveal());
     $this->assertFileMetadata($metadata);
   }
 
@@ -452,7 +494,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testUpdateFail() {
     $adapter = $this->createAdapterForWriteFail();
 
-    $this->assertTrue($adapter->update('', '', $this->prophesize(Config::class)->reveal()) == FALSE, "write() must return FALSE on non-201 or non-204");
+    $this->assertTrue($adapter->update('', '', $this->prophesize(Config::class)
+      ->reveal()) == FALSE, "write() must return FALSE on non-201 or non-204");
   }
 
   /**
@@ -461,7 +504,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testUpdate() {
     $adapter = $this->createAdapterForWrite();
 
-    $metadata = $adapter->update('', '', $this->prophesize(Config::class)->reveal());
+    $metadata = $adapter->update('', '', $this->prophesize(Config::class)
+      ->reveal());
     $this->assertFileMetadata($metadata);
   }
 
@@ -471,7 +515,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testUpdateStreamFail() {
     $adapter = $this->createAdapterForWriteFail();
 
-    $this->assertTrue($adapter->updateStream('', '', $this->prophesize(Config::class)->reveal()) == FALSE, "writeStream() must return FALSE on non-201 or non-204");
+    $this->assertTrue($adapter->updateStream('', '', $this->prophesize(Config::class)
+      ->reveal()) == FALSE, "writeStream() must return FALSE on non-201 or non-204");
   }
 
   /**
@@ -480,7 +525,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testUpdateStream() {
     $adapter = $this->createAdapterForWrite();
 
-    $metadata = $adapter->updateStream('', '', $this->prophesize(Config::class)->reveal());
+    $metadata = $adapter->updateStream('', '', $this->prophesize(Config::class)
+      ->reveal());
     $this->assertFileMetadata($metadata);
   }
 
@@ -555,8 +601,13 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testRename() {
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')
+      ->willReturn([
+        '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+        '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"',
+      ]);
     $prophecy->getHeader('Content-Type')->willReturn(['text/plain']);
     $prophecy->getHeader('Content-Length')->willReturn([strlen("DERP")]);
     $prophecy->getBody()->willReturn(PSR7\stream_for("DERP"));
@@ -573,21 +624,27 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
     $timestamp = $date->format("D, d M Y H:i:s O");
     $fedora_prophecy->createVersion('',
       Argument::any(), NULL,
-    Argument::any())->willReturn($prophecy->reveal());
+      Argument::any())->willReturn($prophecy->reveal());
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(201);
 
-    $fedora_prophecy->saveResource(Argument::any(), Argument::any(), Argument::any())->willReturn($response);
+    $fedora_prophecy->saveResource(Argument::any(), Argument::any(), Argument::any())
+      ->willReturn($response);
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(200);
-    $prophecy->getHeader('Last-Modified')->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
-    $prophecy->getHeader('Link')->willReturn(['<http://www.w3.org/ns/ldp#Resource>;rel="type"', '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"']);
+    $prophecy->getHeader('Last-Modified')
+      ->willReturn(["Wed, 25 Jul 2018 17:42:04 GMT"]);
+    $prophecy->getHeader('Link')->willReturn([
+      '<http://www.w3.org/ns/ldp#Resource>;rel="type"',
+      '<http://www.w3.org/ns/ldp#NonRDFSource>;rel="type"',
+    ]);
     $prophecy->getHeader('Content-Type')->willReturn(['text/plain']);
     $prophecy->getHeader('Content-Length')->willReturn([strlen("DERP")]);
     $response = $prophecy->reveal();
 
-    $fedora_prophecy->getResourceHeaders(Argument::any())->willReturn($response);
+    $fedora_prophecy->getResourceHeaders(Argument::any())
+      ->willReturn($response);
 
     $prophecy = $this->prophesize(Response::class);
     $prophecy->getStatusCode()->willReturn(204);
@@ -597,7 +654,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     $adapter = new FedoraAdapter($api, $mime_guesser);
 
@@ -616,11 +674,13 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
 
     $api = $fedora_prophecy->reveal();
 
-    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)->reveal();
+    $mime_guesser = $this->prophesize(MimeTypeGuesserInterface::class)
+      ->reveal();
 
     $adapter = new FedoraAdapter($api, $mime_guesser);
 
-    $this->assertTrue($adapter->createDir('', $this->prophesize(Config::class)->reveal()) == FALSE, "createDir() must return FALSE on fail");
+    $this->assertTrue($adapter->createDir('', $this->prophesize(Config::class)
+      ->reveal()) == FALSE, "createDir() must return FALSE on fail");
   }
 
   /**
@@ -629,7 +689,8 @@ class FedoraAdapterTest extends IslandoraKernelTestBase {
   public function testCreateDir() {
     $adapter = $this->createAdapterForCreateDir();
 
-    $metadata = $adapter->createDir('', $this->prophesize(Config::class)->reveal());
+    $metadata = $adapter->createDir('', $this->prophesize(Config::class)
+      ->reveal());
     $this->assertDirMetadata($metadata);
   }
 

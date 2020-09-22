@@ -8,7 +8,7 @@ use Drupal\Component\Utility\UrlHelper;
 use GuzzleHttp\Exception\ClientException;
 
 /**
- * Class IslandoraIIIFConfigForm.
+ * Form to configure IslandoraIIIF.
  */
 class IslandoraIIIFConfigForm extends ConfigFormBase {
 

@@ -3,7 +3,7 @@
 namespace Drupal\Tests\islandora\Functional;
 
 /**
- * Class JsonldTypeAlterReactionTest.
+ * Tests Jsonld Alter Reaction.
  *
  * @package Drupal\Tests\islandora\Functional
  * @group islandora

@@ -11,7 +11,6 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\StreamWrapper;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
-use DateTime;
 
 /**
  * Fedora adapter for Flysystem.
@@ -255,7 +254,7 @@ class FedoraAdapter implements AdapterInterface {
     ];
     if ($this->has($path)) {
       $fedora_url = $path;
-      $date = new DateTime();
+      $date = new \DateTime();
       $timestamp = $date->format("D, d M Y H:i:s O");
       // Create version in Fedora.
       try {
