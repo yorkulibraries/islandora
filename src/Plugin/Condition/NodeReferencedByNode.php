@@ -11,17 +11,17 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Condition to detect if is a node is referenced by a configured field.
+ * Condition to detect if is a node is referenced by another node using the configured field.
  *
  * @Condition(
- *   id = "node_referenced_by_field",
- *   label = @Translation("Node referenced by field"),
+ *   id = "node_referenced_by_node",
+ *   label = @Translation("Node is referenced by other nodes"),
  *   context = {
  *     "node" = @ContextDefinition("entity:node", required = TRUE , label = @Translation("node"))
  *   }
  * )
  */
-class NodeReferencedByField extends ConditionPluginBase implements ContainerFactoryPluginInterface {
+class NodeReferencedByNode extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * Node storage.
@@ -140,10 +140,10 @@ class NodeReferencedByField extends ConditionPluginBase implements ContainerFact
    */
   public function summary() {
     if (!empty($this->configuration['negate'])) {
-      return $this->t('The node is not referenced in the field @field.', ['@field' => $this->configuration['reference_field']]);
+      return $this->t('The node is not referenced in another node\'s field `@field`.', ['@field' => $this->configuration['reference_field']]);
     }
     else {
-      return $this->t('The node is referenced in the field @field.', ['@field' => $this->configuration['reference_field']]);
+      return $this->t('The node is referenced in another node\'s field `@field`.', ['@field' => $this->configuration['reference_field']]);
     }
   }
 
