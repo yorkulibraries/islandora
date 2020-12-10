@@ -120,6 +120,8 @@ function islandora_media_insert(MediaInterface $media) {
       $media
     );
   }
+  // Wait until the media insert is complete, then fire file derivatives.
+  drupal_register_shutdown_function('_islandora_fire_media_file_derivative_reaction', $media);
 }
 
 /**
@@ -170,16 +172,22 @@ function islandora_media_delete(MediaInterface $media) {
 }
 
 /**
- * Implements hook_ENTITYTYPE_postsave().
+ * Helper to fire media derivative file reactions after a media 'insert'.
+ *
+ * This function should not be called on its own; it exists as a workaround to
+ * being unable to fire media events after a media insert operation. This
+ * behaviour will eventually be replaced by event listeners once these are
+ * implemented in Drupal 9.
+ *
+ * @param \Drupal\Core\Media\MediaInterface $media
+ *   The media that was just inserted.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2551893
  */
-function islandora_media_postsave(EntityInterface $media, $op) {
-
+function _islandora_fire_media_file_derivative_reaction(MediaInterface $media) {
   $utils = \Drupal::service('islandora.utils');
-  // Add derived file to the media.
-  if ($op == 'insert') {
-    $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
-  }
-
+  // Execute derivative file reactions.
+  $utils->executeMediaReactions('\Drupal\islandora\Plugin\ContextReaction\DerivativeFileReaction', $media);
 }
 
 /**

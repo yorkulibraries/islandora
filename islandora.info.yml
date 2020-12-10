@@ -31,5 +31,4 @@ dependencies:
   - content_translation
   - flysystem
   - token
-  - hook_post_action
   - file_replace
