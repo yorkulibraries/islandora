@@ -366,7 +366,7 @@ class MediaSourceService {
 
       // Validate file extension.
       $bundle = $media->bundle();
-      $destination_field_config= $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$destination_field");
+      $destination_field_config = $this->entityTypeManager->getStorage('field_config')->load("media.$bundle.$destination_field");
       $valid_extensions = $destination_field_config->getSetting('file_extensions');
       $errors = file_validate_extensions($file, $valid_extensions);
 
@@ -383,7 +383,7 @@ class MediaSourceService {
       $this->updateFile($file, $resource, $mimetype);
       $file->save();
 
-      // Update the media
+      // Update the media.
       $media->{$destination_field}->setValue([
         'target_id' => $file->id(),
       ]);
@@ -393,4 +393,5 @@ class MediaSourceService {
       throw new BadRequestHttpException("Media does not have destination field $destination_field");
     }
   }
+
 }
